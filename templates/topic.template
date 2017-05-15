@@ -1,0 +1,10 @@
+<div class="card darken-1">
+  <div class="card-content">
+    <p data-url="#/topic/<%= id %>"><%= topic.topicContent %></p>
+  </div>
+  <div class="card-action">
+   <a href="#">Save</a>
+   <a href="#">Remove</a>
+   <a href="#/joke/<%= id %>">Write</a>
+ </div>
+</div>
