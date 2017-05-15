@@ -1,0 +1,162 @@
+/*.icon-block {
+  padding: 0 15px;
+}
+.icon-block .material-icons {
+	font-size: inherit;
+}*/
+
+/*.nav-wrapper {
+  width: 100%;
+}*/
+
+body {
+  background-color: #fdd835;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+#jokes, #editJoke {
+  background-color: #fafafa;
+  margin: 0 100px 0 100px;
+  border-radius: 15px;
+}
+
+
+nav {
+  background-color: #fdd835;
+}
+
+.nav-wrapper {
+  background-color: #fdd835;
+  text-align: justify;
+  /*min-width: 500px;*/
+  top: 0;
+}
+
+.nav-wrapper:after {
+    content: '';
+    display: inline-block;
+    width: 100%;
+}
+
+.nav-wrapper ul {
+  width:100%;
+  margin:0 auto;
+  padding:0;
+  list-style:none;
+  text-align:center;
+  font-family: sans-serif;
+}
+
+.nav-wrapper ul li {
+  display:inline-block;
+  width:33%;
+  margin:0;
+  padding:0;
+}
+
+nav ul a {
+  color: #212121;
+  font-size: 20;
+}
+
+textarea.materialize-textarea {
+  overflow: scroll;
+}
+
+/*RATING CSS START*/
+#jokeRating {
+  text-align: left;
+}
+
+.jokeTopic {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+#topics {
+  text-align: center;
+}
+
+.rating {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+}
+.rating > span {
+  display: inline-block;
+  position: relative;
+  width: 1.1em;
+}
+.rating > span:hover:before,
+.rating > span:hover ~ span:before {
+   content: "\2605";
+   position: absolute;
+}
+.rating label {
+  line-height: 30px;
+}
+/*END RATING CSS*/
+
+.cards-container .card {
+  border-radius: 10px;
+}
+
+.card .card-content {
+    border-radius: 10px;
+}
+
+.card .card-action:last-child {
+  border-radius: 10px;
+}
+
+.cards-container {
+  column-break-inside: avoid;
+
+}
+.cards-container .card {
+  display: inline-block;
+  overflow: visible;
+}
+
+.container {
+  margin-top: 15px;
+}
+
+@media only screen and (max-width: 600px) {
+  .cards-container {
+    -webkit-column-count: 1;
+    -moz-column-count: 1;
+    column-count: 1;
+  }
+}
+@media only screen and (min-width: 601px) {
+  .cards-container {
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
+    column-count: 2;
+  }
+}
+@media only screen and (min-width: 993px) {
+  .cards-container {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+  }
+}
+.text-center {
+  text-align: center;
+}
+
+.card .card-action a:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating) {
+  color: #212121;
+}
+
+.page-footer {
+  background-color: #fdd835;
+  color: #212121;
+}
