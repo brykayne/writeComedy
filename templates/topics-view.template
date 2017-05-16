@@ -1,7 +1,4 @@
-<div class="row"  id="topics">
-  <div class="col s12 cards-container">
-  {{#each topics}}
-    {{topic.id}}
-  {{/each}}
+<div class="row">
+  <div id="topics" class="col s12 cards-container">
   </div>
 </div>
