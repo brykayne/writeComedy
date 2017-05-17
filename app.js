@@ -19,11 +19,12 @@
   //Set aside collection for topics and get a ref for it
   var topicsCollection = db.ref("topics");
 
-  topicsCollection.on("value", function(snapshot) {
-      // console.log(snapshot.val());
-    }, function (errorObject) {
-      // console.log("The read failed: " + errorObject.code);
-    });
+  // topicsCollection.on("value", function(snapshot) {
+  //     var topics = snapshot.val();
+  //     console.log(topics);
+  //   }, function (errorObject) {
+  //     console.log("The read failed: " + errorObject.code);
+  //   });
 
   var Utils = {
     uuid: function () {
@@ -48,73 +49,92 @@
     var currentTopics = [];
     function bindEvents() {
       $('#app').on('click', '#addTopicBtn', createNewTopic);
-      $('#app').on('dblclick','#topic', handleDoubleClickTopic);
+      $('#app').on('dblclick','#topic', editTopic);
     };
 
     function createNewTopic(e) {
       e.preventDefault();
-      console.log('New Topic appear!');
+      console.log(e);
+      console.log('check firebase, new topic added.');
       //Create new div on #topics for new topic
+      var content = '';
+      var id = _.uniqueId();
+
+      //write new topic to firebase
+      topicsCollection.push({
+        id: id,
+        content: content,
+        jokeWritten: false
+      });
+      // $('#topicInput').show();
+
+      // function (context) {
+      //   context.render('templates/topic.template').appendTo("#app");
+      // });
+
     };
 
-    function handleDoubleClickTopic(e) {
+    function editTopic(e) {
       e.stopPropagation();
       console.log('edit the topic now');
       //Get topic content
       var topicContent = $('#topicContent').text();
       console.log(topicContent);
+      // $('#topicInput').show();
       //Add input class to this.topic
 
       //Put content in input
     };
 
 
-
-    // $('#app').on('click', '.saveBtn', function(event) {
-    //   event.preventDefault();
-    //   console.log('it worked yo');
-    // });
-
-    //On Click of addtopicbtn, add a new topic
-    // $('#app').on('click', '#addTopicBtn', function(event) {
-    //   event.preventDefault();
-    //   console.log('button click successful');
-    //   //Create new div on #topics for new topic
-    //
-    // });
-
-    //After new div is created, then let user edit text
-
-
     this.around(function(callback) {
       var context = this;
       // console.log(context);
+      //console.log('Context var in data load function',context);
+
+      //Put Firebase Database content loading here.
+
+      topicsCollection.on("value", function(snapshot) {
+          var topics = snapshot.val();
+          console.log('topics',topics);
+        }, function (errorObject) {
+          console.log("The read failed: " + errorObject.code);
+        });
+
+
       this.load('/data/topics.json').then(function(topics) {
+
         context.topics = topics;
-        // console.log(context.topics);
+        console.log('context.topics', context.topics);
       }).then(callback);
     });
 
     //topics view
     this.get('#/', function(context) {
+      // console.log('Context var in topics view before swap', context);
+      // console.log('event is = ', event);
+      // console.log('this is = ', this);
+      // console.log('this.topics is =', this.topics);
       context.app.swap('');
-
+      // console.log('Context var in topics view after swap', context);
       context.render('templates/topics-view.template').appendTo("#app");
+
+
 
       $.each(context.topics, function(i, topic) {
         context.render('templates/topic.template', {id: i, topic: topic})
           .appendTo('#topics');
       });
-
+      // console.log('after',context);
       bindEvents();
 
     });
 
-    this.before('.*', function() {
-      var hash = document.location.hash;
-      $('nav').find('a').removeClass('current');
-      $("nav").find("a[href='"+hash+"']").addClass("current");
-    });
+    // this.before('.*', function() {
+    //   var hash = document.location.hash;
+    //   $('nav').find('a').removeClass('current');
+    //   $("nav").find("a[href='"+hash+"']").addClass("current");
+    // });
 
   });
 
