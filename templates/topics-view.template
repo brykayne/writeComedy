@@ -2,3 +2,9 @@
   <div id="topics" class="col s12 cards-container">
   </div>
 </div>
+
+<div id="addTopicBtn" class="fixed-action-btn">
+  <a class="btn-floating btn-large grey darken-4">
+    <i class="large material-icons">mode_edit</i>
+  </a>
+</div>
