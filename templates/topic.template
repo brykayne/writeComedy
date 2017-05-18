@@ -1,6 +1,6 @@
 <div id="topic" data-id="<%= id %>" class="card darken-1">
   <div class="card-content">
-    <p id="topicContent"><%= topic.topicContent %></p>
+    <p id="topicContent"><%= content %></p>
   </div>
   <div class="card-action">
    <a class="saveBtn" href="#">Save</a>

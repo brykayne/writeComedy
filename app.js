@@ -19,12 +19,7 @@
   //Set aside collection for topics and get a ref for it
   var topicsCollection = db.ref("topics");
 
-  // topicsCollection.on("value", function(snapshot) {
-  //     var topics = snapshot.val();
-  //     console.log(topics);
-  //   }, function (errorObject) {
-  //     console.log("The read failed: " + errorObject.code);
-  //   });
+
 
   var Utils = {
     uuid: function () {
@@ -46,90 +41,88 @@
 
   var App = $.sammy('#app', function() {
     this.use('Template');
-    var currentTopics = [];
-    function bindEvents() {
-      $('#app').on('click', '#addTopicBtn', createNewTopic);
-      $('#app').on('dblclick','#topic', editTopic);
-    };
+    // var currentTopics = [];
+
+    $('#app').on('click', '#addTopicBtn', createNewTopic);
+    // $('#app').on('dblclick','#topic', editTopic);
+
+
 
     function createNewTopic(e) {
       e.preventDefault();
       console.log(e);
-      console.log('check firebase, new topic added.');
       //Create new div on #topics for new topic
-      var content = '';
-      var id = _.uniqueId();
-
+      var content = prompt("Enter your new topic yo.");
       //write new topic to firebase
       topicsCollection.push({
-        id: id,
         content: content,
         jokeWritten: false
       });
-      // $('#topicInput').show();
-
-      // function (context) {
-      //   context.render('templates/topic.template').appendTo("#app");
-      // });
-
     };
+
+
 
     function editTopic(e) {
       e.stopPropagation();
-      console.log('edit the topic now');
-      //Get topic content
-      var topicContent = $('#topicContent').text();
-      console.log(topicContent);
-      // $('#topicInput').show();
-      //Add input class to this.topic
+
+      var el = e.target;
+      console.log(el);
+      var clos = el.closest('div');
+
+      console.log(clos.text());
+      // var $el = $(el);
+      // console.log($el);
+      // var val = $el.val().trim();
+      // console.log(val);
+
+      // if (!val) {
+      //   //destroy it!!! Need to add this in :)
+      //   return;
+      // }
+
+      if ($el.data('abort')) {
+        $el.data('abort', false);
+      } else {
+        var id = $('#topic').data('id');
+        console.log(id);
+      }
 
       //Put content in input
     };
 
-
-    this.around(function(callback) {
-      var context = this;
-      // console.log(context);
-      //console.log('Context var in data load function',context);
-
-      //Put Firebase Database content loading here.
-
-      topicsCollection.on("value", function(snapshot) {
-          var topics = snapshot.val();
-          console.log('topics',topics);
-        }, function (errorObject) {
-          console.log("The read failed: " + errorObject.code);
-        });
-
-
-      this.load('/data/topics.json').then(function(topics) {
-
-        context.topics = topics;
-        console.log('context.topics', context.topics);
-      }).then(callback);
-    });
-
     //topics view
     this.get('#/', function(context) {
-      // console.log('Context var in topics view before swap', context);
-      // console.log('event is = ', event);
-      // console.log('this is = ', this);
-      // console.log('this.topics is =', this.topics);
+
       context.app.swap('');
-      // console.log('Context var in topics view after swap', context);
+
       context.render('templates/topics-view.template').appendTo("#app");
 
+      topicsCollection.on('value', renderTopics.bind());
 
+      function renderTopics(response) {
+          var responseVal = response.val();
+          var responseKeys = Object.keys(responseVal);
+          var topics = _.map(responseKeys, function(id) {
+            var firebaseTopicObj = responseVal[id];
+            return {
+              id: id,
+              content: firebaseTopicObj.content,
+              jokeWritten: firebaseTopicObj.jokeWritten
+            };
+          });
 
-      $.each(context.topics, function(i, topic) {
-        context.render('templates/topic.template', {id: i, topic: topic})
-          .appendTo('#topics');
-      });
-      // console.log('after',context);
-      bindEvents();
+          console.log(topics);
+
+          $.each(topics, function(i, topic) {
+            context.render('templates/topic.template', topic)
+              .appendTo('#topics');
+          });
+
+        };
 
     });
 
+    // SAMMY TUTORIAL CODE:
     // this.before('.*', function() {
     //   var hash = document.location.hash;
     //   $('nav').find('a').removeClass('current');
