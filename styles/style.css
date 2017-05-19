@@ -102,6 +102,22 @@ textarea.materialize-textarea {
 }
 /*END RATING CSS*/
 
+#topic.card.darken-1.editing {
+  padding: 0;
+}
+
+#topic.card.darken-1.editing textarea.edit {
+  display: inline;
+}
+
+#topic.card.darken-1.editing div.card-content.view {
+  display: none;
+}
+
+#topic textarea {
+  display: none;
+}
+
 .cards-container .card {
   border-radius: 10px;
 }
@@ -159,4 +175,8 @@ textarea.materialize-textarea {
 .page-footer {
   background-color: #fdd835;
   color: #212121;
+}
+
+.hidden {
+	display: none;
 }

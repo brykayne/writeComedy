@@ -18,8 +18,21 @@
   var db = firebase.database();
   //Set aside collection for topics and get a ref for it
   var topicsCollection = db.ref("topics");
+  //Put topics into an array here
 
-
+  // //topic template Underscore
+  // var topicTMPL = _.template("<div id=\"topic\" data-id=\"<%= id %>\" class=\"card darken-1\">   \
+  //   <div class=\"card-content\">           \
+  //     <p id=\"topicContent\"><%= content %></p>     \
+  //   </div>  \
+  //   <textarea class=\"card-content\" value=\"<%= content %\"></textarea>  \
+  //   <div class=\"card-action\">   \
+  //     <a class=\"saveBtn\" href=\"#\">Save</a>   \
+  //     <a class=\"removeBtn\" href=\"#\">Remove</a>  \
+  //     <a class=\"writeBtn\" href=\"#/joke/<%= id %>\">Write</a>  \
+  //    </div>  \
+  // </div>
+  // ");
 
   var Utils = {
     uuid: function () {
@@ -44,7 +57,7 @@
     // var currentTopics = [];
 
     $('#app').on('click', '#addTopicBtn', createNewTopic);
-    // $('#app').on('dblclick','#topic', editTopic);
+    $('#app').on('dblclick','#topic', showEdit);
 
 
 
@@ -52,7 +65,8 @@
       e.preventDefault();
       console.log(e);
       //Create new div on #topics for new topic
-      var content = prompt("Enter your new topic yo.");
+      var contentPrompt = prompt("Enter your new topic yo.");
+      var content = contentPrompt.toString();
       //write new topic to firebase
       topicsCollection.push({
         content: content,
@@ -60,32 +74,50 @@
       });
     };
 
+    function showEdit(e) {
+      var el = e.target;
+      var $el = $(el);
+      console.log($el);
+      var val = $el.text();
+      console.log(val);
+
+      $el.parent().parent().addClass('editing');
+      debugger;
+      // $('#topic div.view').hide()
+      // $('#topic .edit').show()
+    }
 
 
     function editTopic(e) {
       e.stopPropagation();
 
-      var el = e.target;
-      console.log(el);
-      var clos = el.closest('div');
 
-      console.log(clos.text());
+
+      // var el = e.target;
       // var $el = $(el);
       // console.log($el);
-      // var val = $el.val().trim();
+      // var val = $el.text();
       // console.log(val);
 
       // if (!val) {
       //   //destroy it!!! Need to add this in :)
       //   return;
       // }
+      //
+      // //Get DATA ID of the card the user dblclicked on
+      // dataId = $el.parent().parent().data('id')
+      // console.log(dataId);
+      //
+      // if ($el.data('abort')) {
+      //   $el.data('abort', false);
+      // } else {
+      //   var id = dataId;
+      //   topicsCollection.child(id).update({
+      //     content: val
+      //   });
+      //
+      // }
 
-      if ($el.data('abort')) {
-        $el.data('abort', false);
-      } else {
-        var id = $('#topic').data('id');
-        console.log(id);
-      }
 
       //Put content in input
     };
@@ -102,6 +134,7 @@
       function renderTopics(response) {
           var responseVal = response.val();
           var responseKeys = Object.keys(responseVal);
+
           var topics = _.map(responseKeys, function(id) {
             var firebaseTopicObj = responseVal[id];
             return {
@@ -110,12 +143,20 @@
               jokeWritten: firebaseTopicObj.jokeWritten
             };
           });
-
+          //Lists all topics in db
           console.log(topics);
 
+          //Underscore Template instead of BS Sammy BS
+
+
+          /////////////
+          /////////////
+          ////destroy from db if there’s no val!!
+          ////////////
           $.each(topics, function(i, topic) {
-            context.render('templates/topic.template', topic)
-              .appendTo('#topics');
+              console.log('topic #'+i, topic);
+              context.render('templates/topic.template', topic)
+                  .appendTo('#topics');
           });
 
         };
