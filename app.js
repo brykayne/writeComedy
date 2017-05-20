@@ -20,8 +20,7 @@
   var db = firebase.database();
   //Set aside collection for topics and get a ref for it
   var topicsCollection = db.ref("topics");
-  // var jokesCollection = db.ref("jokes");
-  // var setsCollection = db.ref("sets");
+  
 
 
   var Utils = {
@@ -47,8 +46,9 @@
     // var currentTopics = [];
 
     $('#app').on('click', '#addTopicBtn', create);
-    $('#app').on('dblclick','#topic', showTopicEdit);
-    $('#app').on('click', '.saveBtn', editTopicContent);
+    // $('#app').on('dblclick','topicContent', showCardAction);
+    $('#app').on('dblclick','#topic .topicContent', showTopicEdit);
+    $('#app').on('click', '.saveBtn', update);
     $('#app').on('click', '.removeBtn', destroy);
 
 
@@ -58,7 +58,14 @@
 
       var contentPrompt = prompt("Enter your new topic yo.");
 
-      //Create new div on #topics for new topic
+      //Pseudo-code to Create new div on #topics for new topic
+      //1. Create a new card in #topics
+      //2. Set the value of topicContent in the card to ' '
+      //3. Set a class to 'editing' of the topic
+      //4. Grab the value of the text that the user enters and put it as topicContent
+      //5. Store that topicContent value in the database.
+
+      // console.log('TopicTemplate', topicTemplate);
 
       var content = contentPrompt.toString();
       //write new topic to firebase
@@ -67,6 +74,8 @@
         jokeWritten: false
       });
     };
+
+    // function showCardAction(e) {}
 
     function showTopicEdit(e) {
       var el = e.target;
@@ -83,7 +92,7 @@
 
 
 
-    function editTopicContent(e) {
+    function update(e) {
       e.stopPropagation();
 
       var el = e.target;
@@ -101,20 +110,13 @@
       //Remove Editing Class
       $el.parent().parent().removeClass('editing');
 
-
       //dataId of topic to update Firebase
       var dataId = $el.parents().eq(1).data('id');
 
-      console.log(dataId);
-
-      // if (!newTopicContent) {
-      //   //destroy it!!! Need to add this in :)
-      //   return;
-      // }
-      //
-
-
-
+      if (!newTopicContent) {
+        this.destroy;
+        return;
+      }
 
       if ($el.data('abort')) {
         $el.data('abort', false);
@@ -124,9 +126,6 @@
           content: newTopicContent
         });
       }
-
-
-      //Put content in input
     };
 
     function destroy(e) {
