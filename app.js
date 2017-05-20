@@ -19,9 +19,10 @@
   //get reference to Firebase's database
   var db = firebase.database();
   //Set aside collection for topics and get a ref for it
-  var topicsCollection = db.ref("topics");
-  
-
+  //REMEMBER TO SWITCH REF BACK TO 'TOPICS'
+  // var topicsCollection = db.ref("topics");
+    var dbRef = db.ref();
+    var topicsCollection = db.ref('topics');
 
   var Utils = {
     uuid: function () {
@@ -43,7 +44,6 @@
 
   var App = $.sammy('#app', function() {
     this.use('Template');
-    // var currentTopics = [];
 
     $('#app').on('click', '#addTopicBtn', create);
     // $('#app').on('dblclick','topicContent', showCardAction);
@@ -67,15 +67,18 @@
 
       // console.log('TopicTemplate', topicTemplate);
 
-      var content = contentPrompt.toString();
+      // var context =
+
+      var content = contentPrompt.toString().trim();
       //write new topic to firebase
       topicsCollection.push({
         content: content,
         jokeWritten: false
       });
-    };
 
-    // function showCardAction(e) {}
+      debugger;
+
+    };
 
     function showTopicEdit(e) {
       var el = e.target;
@@ -86,6 +89,8 @@
 
       $el.parent().parent().addClass('editing');
 
+      $el.parent().parent().find('.card-action').show()
+      // $cardActionSection.show();
       // $('#topic div.view').hide()
       // $('#topic .edit').show()
     };
@@ -109,6 +114,9 @@
 
       //Remove Editing Class
       $el.parent().parent().removeClass('editing');
+
+      //Hide Card Action class
+      $el.parent().parent().find('.card-action').hide();
 
       //dataId of topic to update Firebase
       var dataId = $el.parents().eq(1).data('id');
@@ -145,36 +153,33 @@
       context.render('templates/topics-view.template').appendTo("#app");
 
       //old code from class --> value
-      topicsCollection.on('value', renderTopics);
+      // topicsCollection.on('value', renderTopics);
 
-      // topicsCollection.on('child_added', renderTopics.);
-
-      function renderTopics(response) {
-          var responseVal = response.val();
-          // console.log(responseVal);
-          var responseKeys = Object.keys(responseVal);
+      dbRef.on('child_added', function(snapshot, prevChildKey) {
+        var snapshotVal = snapshot.val();
+          // console.log(snapshotVal);
+          var responseKeys = Object.keys(snapshotVal);
           // console.log(responseKeys);
+
           var topics = _.map(responseKeys, function(id) {
-            var firebaseTopicObj = responseVal[id];
+            var firebaseTopicObj = snapshotVal[id];
             return {
               id: id,
               content: firebaseTopicObj.content,
               jokeWritten: firebaseTopicObj.jokeWritten
             };
           });
-          //Lists all topics in db
-          // console.log(topics);
-
-          //Underscore Template instead of BS Sammy BS
-
 
           $.each(topics, function(i, topic) {
               // console.log('topic #'+i, topic);
               context.render('templates/topic.template', topic)
                   .appendTo('#topics');
           });
+        });
 
-        };
+
+      //THE renderTopics below works if we use 'value' instead of 'child_added'
+
 
     });
 
@@ -193,11 +198,22 @@
       console.log('new route sets added');
     });
 
-    // SAMMY TUTORIAL CODE:
+    // Shows navbar as highlighted depending on route clicked:
     this.before('.*', function() {
       var hash = document.location.hash;
       $('nav').find('a').removeClass('current');
       $("nav").find("a[href='"+hash+"']").addClass("current");
+    });
+
+    // Do this when no route defined:
+    this.get('', function(context) {
+    // No route defined, set location to '#/' to trigger app automatically:
+    document.location.hash = '/topics/';
+    });
+
+    // Catch-all for 404 errors:
+    this.get(/.*/, function() {
+    console.log('404... come on, really?');
     });
 
   });

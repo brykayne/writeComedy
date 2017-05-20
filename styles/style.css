@@ -102,6 +102,8 @@ textarea.materialize-textarea {
 
 #topic.card.darken-1.editing textarea.edit {
   display: inline;
+  min-width: 200px;
+  min-height: 100px;
 }
 
 #topic.card.darken-1.editing div.card-content.view {
@@ -135,9 +137,9 @@ textarea.materialize-textarea {
   border-radius: 10px;
 }
 
-/*.card-action {
+.card-action {
   display: none;
-}*/
+}
 
 .cards-container {
   column-break-inside: avoid;
@@ -146,6 +148,7 @@ textarea.materialize-textarea {
 .cards-container .card {
   display: inline-block;
   overflow: visible;
+  min-width: 200px;
 }
 
 .container {
