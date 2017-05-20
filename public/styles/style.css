@@ -119,10 +119,6 @@ textarea.materialize-textarea {
   display: none;
 }
 
-.current {
-  background-color: #fff999;
-}
-
 .cards-container .card {
   border-radius: 10px;
 }

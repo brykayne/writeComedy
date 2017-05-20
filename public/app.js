@@ -20,9 +20,6 @@
   var db = firebase.database();
   //Set aside collection for topics and get a ref for it
   var topicsCollection = db.ref("topics");
-  // var jokesCollection = db.ref("jokes");
-  // var setsCollection = db.ref("sets");
-
 
   var Utils = {
     uuid: function () {
@@ -46,20 +43,17 @@
     this.use('Template');
     // var currentTopics = [];
 
-    $('#app').on('click', '#addTopicBtn', create);
+    $('#app').on('click', '#addTopicBtn', createNewTopic);
     $('#app').on('dblclick','#topic', showTopicEdit);
     $('#app').on('click', '.saveBtn', editTopicContent);
     $('#app').on('click', '.removeBtn', destroy);
 
 
-    function create(e) {
+    function createNewTopic(e) {
       e.preventDefault();
       console.log(e);
-
-      var contentPrompt = prompt("Enter your new topic yo.");
-
       //Create new div on #topics for new topic
-
+      var contentPrompt = prompt("Enter your new topic yo.");
       var content = contentPrompt.toString();
       //write new topic to firebase
       topicsCollection.push({
@@ -139,7 +133,7 @@
     };
 
     //topics view
-    this.get('#/topics/', function(context) {
+    this.get('#/', function(context) {
 
       context.app.swap('');
 
@@ -151,6 +145,8 @@
       // topicsCollection.on('child_added', renderTopics.);
 
       function renderTopics(response) {
+
+          console.log(response);
           var responseVal = response.val();
           // console.log(responseVal);
           var responseKeys = Object.keys(responseVal);
@@ -169,6 +165,10 @@
           //Underscore Template instead of BS Sammy BS
 
 
+          /////////////
+          /////////////
+          ////destroy from db if there’s no val!!
+          ////////////
           $.each(topics, function(i, topic) {
               // console.log('topic #'+i, topic);
               context.render('templates/topic.template', topic)
@@ -179,31 +179,16 @@
 
     });
 
-    //Jokes Route
-    this.get('#/jokes/', function(context) {
-
-      context.app.swap('');
-      console.log('new route jokes added');
-    });
-
-    //Sets route
-
-    this.get('#/sets/', function(context) {
-
-      context.app.swap('');
-      console.log('new route sets added');
-    });
-
     // SAMMY TUTORIAL CODE:
-    this.before('.*', function() {
-      var hash = document.location.hash;
-      $('nav').find('a').removeClass('current');
-      $("nav").find("a[href='"+hash+"']").addClass("current");
-    });
+    // this.before('.*', function() {
+    //   var hash = document.location.hash;
+    //   $('nav').find('a').removeClass('current');
+    //   $("nav").find("a[href='"+hash+"']").addClass("current");
+    // });
 
   });
 
   $(function() {
-    App.run('#/topics/');
+    App.run('#/');
   });
 })(jQuery);
