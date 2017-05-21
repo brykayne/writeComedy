@@ -18,11 +18,10 @@
 
   //get reference to Firebase's database
   var db = firebase.database();
+  //Set aside db ref for child_added
+  var dbRef = db.ref();
   //Set aside collection for topics and get a ref for it
-  //REMEMBER TO SWITCH REF BACK TO 'TOPICS'
-  // var topicsCollection = db.ref("topics");
-    var dbRef = db.ref();
-    var topicsCollection = db.ref('topics');
+  var topicsCollection = db.ref('topics');
 
 
 
@@ -48,11 +47,9 @@
     this.use('Template');
 
     $('#app').on('click', '#addTopicBtn', create);
-    // $('#app').on('dblclick','topicContent', showCardAction);
     $('#app').on('dblclick','#topic .topicContent', showTopicEdit);
     $('#app').on('click', '.saveBtn', update);
     $('#app').on('click', '.removeBtn', destroy);
-
 
 
     function create(e) {
@@ -68,9 +65,6 @@
       //4. Grab the value of the text that the user enters and put it as topicContent
       //5. Store that topicContent value in the database.
 
-      // console.log('TopicTemplate', topicTemplate);
-
-      // var context =
 
       var content = contentPrompt.toString().trim();
       //write new topic to firebase
@@ -79,26 +73,19 @@
         jokeWritten: false
       });
 
+      //Reload topics route so that new child is rendered in DOM
       App.trigger('reloadTopics', App);
-
-      //new topic is sent to database debugger:
-      // debugger;
 
     };
 
     function showTopicEdit(e) {
       var el = e.target;
       var $el = $(el);
-      console.log($el);
       var val = $el.text();
-      console.log(val);
 
       $el.parent().parent().addClass('editing');
 
       $el.parent().parent().find('.card-action').show()
-      // $cardActionSection.show();
-      // $('#topic div.view').hide()
-      // $('#topic .edit').show()
     };
 
 
@@ -161,9 +148,7 @@
       //Moving this to the beginning of the App method.
       dbRef.on('child_added', function(snapshot) {
         var snapshotVal = snapshot.val();
-          // console.log(snapshotVal);
           var responseKeys = Object.keys(snapshotVal);
-          // console.log(responseKeys);
 
           var topics = _.map(responseKeys, function(id) {
             var firebaseTopicObj = snapshotVal[id];
