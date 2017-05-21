@@ -24,6 +24,8 @@
     var dbRef = db.ref();
     var topicsCollection = db.ref('topics');
 
+
+
   var Utils = {
     uuid: function () {
       /*jshint bitwise:false */
@@ -52,6 +54,7 @@
     $('#app').on('click', '.removeBtn', destroy);
 
 
+
     function create(e) {
       e.preventDefault();
       console.log(e);
@@ -76,7 +79,10 @@
         jokeWritten: false
       });
 
-      debugger;
+      App.trigger('reloadTopics', App);
+
+      //new topic is sent to database debugger:
+      // debugger;
 
     };
 
@@ -152,10 +158,8 @@
 
       context.render('templates/topics-view.template').appendTo("#app");
 
-      //old code from class --> value
-      // topicsCollection.on('value', renderTopics);
-
-      dbRef.on('child_added', function(snapshot, prevChildKey) {
+      //Moving this to the beginning of the App method.
+      dbRef.on('child_added', function(snapshot) {
         var snapshotVal = snapshot.val();
           // console.log(snapshotVal);
           var responseKeys = Object.keys(snapshotVal);
@@ -176,10 +180,6 @@
                   .appendTo('#topics');
           });
         });
-
-
-      //THE renderTopics below works if we use 'value' instead of 'child_added'
-
 
     });
 
@@ -214,6 +214,11 @@
     // Catch-all for 404 errors:
     this.get(/.*/, function() {
     console.log('404... come on, really?');
+    });
+
+    //trigger reload when user adds topic
+    this.bind('reloadTopics', function(e, data) {
+      this.redirect('#/topics/');
     });
 
   });
