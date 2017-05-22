@@ -37,39 +37,93 @@
 
 <main>
     <div id="main">
-      <div id="jokes" class="z-depth-2">
+      <div class="container">
+        <div class="row">
+          <div id="jokes" class="z-depth-2">
+              <!--START FORM-->
+              <form id="jokesEdit" class="card col s12 m12 l12">
+                <p class="jokeTopic">Joke Topic</p>
 
-          <div class="container">
-            <div class="row">
-              <div class="col s12 m12 l12">
-                <table class="highlight">
-                  <thead>
-                    <tr>
-                        <th>Joke Title</th>
-                        <th>Highlights</th>
-                        <th>Rating</th>
-                    </tr>
-                  </thead>
+                <div class="input-field col s12 m12 l12">
+                  <input placeholder="Write your title here" id="jokeTitle" type="text" class="validate" />
+                  <label for="jokeTitle">Joke Title</label>
+                </div>
 
-                  <tbody>
-                    <tr>
-                      <td>PDM</td>
-                      <td>Packaged Deli Meats are gross</td>
-                      <td>3</td>
-                    </tr>
-                    <tr>
-                      <td>Old Women Names</td>
-                      <td>Old Jewish women have these one syllable...</td>
-                      <td>4</td>
-                    </tr>
-                    <tr>
-                      <td>The Wind</td>
-                      <td>The wind yells at me every time I go outside!</td>
-                      <td>3</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <div class="input-field col s12 m12 l12">
+                  <textarea placeholder="Write your joke here" id="jokeText" type="text" class="materialize-textarea"></textarea>
+                  <label for="jokeText">Joke Text</label>
+                </div>
+
+                <div class="input-field col s12 m12 l12">
+                <label class="active">Rating:</label>
+                  <div id="jokeRating">
+                    <div class="rating">
+                      <span id="5star">☆</span><span id="4star">☆</span><span id="3star">☆</span><span id="2star">☆</span><span id="1star">☆</span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <!--END FORM-->
+              <div class="col s12 cards-container" id="jokesView">
+
+                 <div class="card darken-1">
+                   <div class="card-content">
+                     <span class="card-title">PDM</span>
+                     <p>Packaged Deli Meats are absolutely gross. I really despise them a ton.
+                        Let me tell you more about how much I hate them. They taste like a bag of rubberbands
+                        really, i'm not joking. i swear. these things taste like a bag of used...
+                        Packaged Deli Meats are absolutely gross. I really despise them a ton.
+                           Let me tell you more about how much I hate them. They taste like a bag of rubberbands
+                           really, i'm not joking. i swear. these things taste like a bag of used...
+                           Packaged Deli Meats are absolutely gross. I really despise them a ton.
+                              Let me tell you more about how mu....</p>
+                   </div>
+                   <div class="card-action">
+                    <a href="#">Save</a>
+                    <a href="#">Remove</a>
+                  </div>
+                  </div>
+
+                 <div class="card darken-1">
+                   <div class="card-content">
+                     <span class="card-title">Old People Names</span>
+                     <p>I went to visit my grandma a few months ago and it was apparent to me
+                     that old woman have these one-syllable names. Fran, Ruth, Joan, Babs. Babs
+                     Nobody wants a Babs!
+                     I went to visit my grandma a few months ago and it was apparent to me
+                     that old woman have these one-syllable names. Fran, Ruth, Joan, Babs. Babs
+                     Nobody wants a Babs!
+                     I went to visit my grandma a...
+                     </p>
+                   </div>
+                  </div>
+
+                 <div class="card darken-1">
+                   <div class="card-content">
+                     <span class="card-title">My mom coughed and pulled a muscle</span>
+                     <p>People get old. I guess my mother is getting old too. I swear that woman
+                     is a toot in a cardboard. I'm not sure what that is, or means, but she's certainly
+                   similar to that phrase. The other day she coughed and told me she pulled a muscle. She
+                    should probably see someone about that methinks. I'm not sure what that is, or means, but she's certainly
+                  similar to that phrase. The other day she coughed and told me she pulled a muscle. She
+                   should probably see someone about that methinks.</p>
+                   </div>
+                  </div>
+
+                 <div class="card darken-1">
+                   <div class="card-content">
+                     <span class="card-title">I don't want to be</span>
+                     <p>Whenever I wake up drunk or hung over i call all my friends and leave voicemails
+                        and sing the song 'I don't wanna be' by Gray guy, i forget his last name. But that
+                        song is such a Perkins song. Perkins was the name of a very normal eatery at the
+                        University of Delaware. I like to call things 'Perkins' when they're so ordinary.
+                        Like the devil. He's Perkins.</p>
+                   </div>
+                  </div>
+
               </div>
+
+
             </div>
           </div>
 
@@ -92,7 +146,6 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="js/vendor/materialize.js"></script>
 <script src="js/vendor/underscore-min.js"></script>
-<script src="js/app.js"></script>
 
 </body>
 </html>

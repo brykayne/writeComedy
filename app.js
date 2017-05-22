@@ -22,6 +22,8 @@
   var dbRef = db.ref();
   //Set aside collection for topics and get a ref for it
   var topicsCollection = db.ref('topics');
+  //Set aside collection for jokes and get a ref for it
+  var jokesCollection = db.ref('jokes');
 
 
 
@@ -46,13 +48,16 @@
   var App = $.sammy('#app', function() {
     this.use('Template');
 
-    $('#app').on('click', '#addTopicBtn', create);
+    //Topics Events
+    $('#app').on('click', '#addTopicBtn', createTopic);
     $('#app').on('dblclick','#topic .topicContent', showTopicEdit);
-    $('#app').on('click', '.saveBtn', update);
-    $('#app').on('click', '.removeBtn', destroy);
+    $('#app').on('click', '.saveBtn', updateTopic);
+    $('#app').on('click', '.removeBtn', destroyTopic);
+    //Jokes Events
+    $('#app').on('click', '.writeJokeBtn', createJoke);
 
 
-    function create(e) {
+    function createTopic(e) {
       e.preventDefault();
       console.log(e);
 
@@ -88,9 +93,7 @@
       $el.parent().parent().find('.card-action').show()
     };
 
-
-
-    function update(e) {
+    function updateTopic(e) {
       e.stopPropagation();
 
       var el = e.target;
@@ -129,7 +132,7 @@
       }
     };
 
-    function destroy(e) {
+    function destroyTopic(e) {
       var el = e.target;
       var $el = $(el);
       var dataId = $el.parents().eq(1).data('id');
@@ -137,6 +140,46 @@
       topicsCollection.child(dataId).remove();
 
     };
+
+    function createJoke(e) {
+      e.preventDefault();
+      console.log('writeJokeButton event worked!');
+      console.log(this);
+
+      //1. Store topic ID and topicContent
+      var topicID, topicContent;
+      //1a. Store topicID
+      topicID = $(this).parents().eq(1).data('id');
+      console.log(topicID);
+      //1b. Store topicContent
+      topicContent = $(this).parent().parent().find('p').text();
+      console.log(topicContent);
+
+      //2. Onclick of 'write joke button', move to jokes route
+      // App.setLocation('#/jokes/');
+      //2a. Display jokesForm
+      //already displayed through css
+
+     //change topic to topicContent
+
+     //
+     //Attempted to store a topic and display on joke form -
+     //Going to stop being a hero and just allow user to create
+     //a joke when clicking the action button in bottom right
+     //corner of screen.
+
+
+
+
+
+
+
+      //Hide Jokes View, Display Jokes Form
+      // $('jokesView').hide()
+      // $('jokesEdit').show();
+
+
+    }
 
     //topics view
     this.get('#/topics/', function(context) {
@@ -172,7 +215,10 @@
     this.get('#/jokes/', function(context) {
 
       context.app.swap('');
-      console.log('new route jokes added');
+      context.log('Jokes VIEW!');
+
+      context.render('templates/jokes-view.template').appendTo("#app");
+
     });
 
     //Sets route
@@ -183,7 +229,7 @@
       console.log('new route sets added');
     });
 
-    // Shows navbar as highlighted depending on route clicked:
+    //Shows navbar as highlighted depending on route clicked:
     this.before('.*', function() {
       var hash = document.location.hash;
       $('nav').find('a').removeClass('current');
