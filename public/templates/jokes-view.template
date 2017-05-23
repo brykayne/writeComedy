@@ -1,0 +1,33 @@
+<div class="row">
+  <div id="jokes" class="z-depth-2">
+      <!--START FORM-->
+      <form id="jokesEdit" class="card col s12 m12 l12">
+        <p class="jokeTopic">Joke Topic</p>
+
+        <div class="input-field col s12 m12 l12">
+          <input placeholder="Write your title here" id="jokeTitle" type="text" class="validate" />
+          <label for="jokeTitle">Joke Title</label>
+        </div>
+
+        <div class="input-field col s12 m12 l12">
+          <textarea placeholder="Write your joke here" id="jokeText" type="text" class="materialize-textarea"></textarea>
+          <label for="jokeText">Joke Text</label>
+        </div>
+
+        <div class="input-field col s12 m12 l12">
+        <label class="active">Rating:</label>
+          <div id="jokeRating">
+            <div class="rating">
+              <span id="5star">☆</span><span id="4star">☆</span><span id="3star">☆</span><span id="2star">☆</span><span id="1star">☆</span>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!--END FORM-->
+      <div class="col s12 cards-container" id="jokesView">
+        
+      </div>
+
+
+    </div>
+  </div>
