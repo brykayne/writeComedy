@@ -3,8 +3,11 @@
   </div>
 </div>
 
-<div id="addTopicBtn" class="fixed-action-btn">
+<div class="fixed-action-btn">
   <a class="btn-floating btn-large grey darken-4">
-    <i class="large material-icons">mode_edit</i>
+    <i id="addTopicBtn" class="large material-icons">mode_edit</i>
   </a>
+  <ul>
+    <li><a id="logoutBtn" class="btn-floating red"><i class="material-icons">publish</i></a></li>
+  </ul>
 </div>

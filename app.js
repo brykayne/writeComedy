@@ -5,61 +5,71 @@
   var ENTER_KEY = 13;
 	var ESCAPE_KEY = 27;
 
-  //Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyA6zyIOrnI5FVVXOCip53xVprtb57In7YU",
-    authDomain: "writecomedy-bbb2e.firebaseapp.com",
-    databaseURL: "https://writecomedy-bbb2e.firebaseio.com",
-    projectId: "writecomedy-bbb2e",
-    storageBucket: "writecomedy-bbb2e.appspot.com",
-    messagingSenderId: "916288483609"
-  };
-  firebase.initializeApp(config);
 
-  //get reference to Firebase's database
-  var db = firebase.database();
-  //Set aside db ref for child_added
-  var dbRef = db.ref();
-  //Set aside collection for topics and get a ref for it
-  var topicsCollection = db.ref('topics');
-  //Set aside collection for jokes and get a ref for it
-  var jokesCollection = db.ref('jokes');
-
-
-
-  var Utils = {
-    uuid: function () {
-      /*jshint bitwise:false */
-      var i, random;
-      var uuid = '';
-
-      for (i = 0; i < 32; i++) {
-        random = Math.random() * 16 | 0;
-        if (i === 8 || i === 12 || i === 16 || i === 20) {
-          uuid += '-';
-        }
-        uuid += (i === 12 ? 4 : (i === 16 ? (random & 3 | 8) : random)).toString(16);
-      }
-
-      return uuid;
-    }
-  };
-
-  var App = $.sammy('#app', function() {
+  var App = $.sammy('#app', function(context) {
     this.use('Template');
+
+    //Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyA6zyIOrnI5FVVXOCip53xVprtb57In7YU",
+      authDomain: "writecomedy-bbb2e.firebaseapp.com",
+      databaseURL: "https://writecomedy-bbb2e.firebaseio.com",
+      projectId: "writecomedy-bbb2e",
+      storageBucket: "writecomedy-bbb2e.appspot.com",
+      messagingSenderId: "916288483609"
+    };
+
+    firebase.initializeApp(config);
+    //get reference to Firebase's database
+    var db = firebase.database();
+    //Firebase Authentication
+    var firebaseAuth = firebase.auth();
+    //Setting provider to Google for Authentication
+    var provider = new firebase.auth.GoogleAuthProvider();
+    var topicsCollection;
+
+    //Set an observer on Auth object because this is asynchronus
+    firebaseAuth.onAuthStateChanged(function(user) {
+      if (user) {
+        console.log(user);
+        //user is signed in
+        //Use user's uid to create topicsCollection
+        topicsCollection = db.ref("users/" + user.uid + "/topics");
+        debugger;
+        App.run('#/topics/');
+        App.trigger('reloadTopics', App);
+
+      } else {
+        //Google Sign-In
+        firebaseAuth.signInWithPopup(provider).then(function(result) {
+          // App.trigger('reloadTopics', App);
+        }).catch(function(error) {
+          console.log(error);
+        });
+      }
+    });
+
 
     //Topics Events
     $('#app').on('click', '#addTopicBtn', createTopic);
     $('#app').on('dblclick','#topic .topicContent', showTopicEdit);
     $('#app').on('click', '.saveBtn', updateTopic);
     $('#app').on('click', '.removeBtn', destroyTopic);
+    $('#app').on('click', '#logoutBtn', logoutUser);
     //Jokes Events
-    $('#app').on('click', '.writeJokeBtn', createJoke);
+    // $('#app').on('click', '.writeJokeBtn', createJoke);
 
+    function logoutUser(e) {
+      $('#topics').text(' ');
+      topicsCollection = null;
+      firebase.auth().signOut();
+
+      debugger;
+
+    };
 
     function createTopic(e) {
       e.preventDefault();
-      console.log(e);
 
       var contentPrompt = prompt("Enter your new topic yo.");
 
@@ -71,7 +81,7 @@
       //5. Store that topicContent value in the database.
 
 
-      var content = contentPrompt.toString().trim();
+      var content = contentPrompt;
       //write new topic to firebase
       topicsCollection.push({
         content: content,
@@ -141,45 +151,45 @@
 
     };
 
-    function createJoke(e) {
-      e.preventDefault();
-      console.log('writeJokeButton event worked!');
-      console.log(this);
-
-      //1. Store topic ID and topicContent
-      var topicID, topicContent;
-      //1a. Store topicID
-      topicID = $(this).parents().eq(1).data('id');
-      console.log(topicID);
-      //1b. Store topicContent
-      topicContent = $(this).parent().parent().find('p').text();
-      console.log(topicContent);
-
-      //2. Onclick of 'write joke button', move to jokes route
-      // App.setLocation('#/jokes/');
-      //2a. Display jokesForm
-      //already displayed through css
-
-     //change topic to topicContent
-
-     //
-     //Attempted to store a topic and display on joke form -
-     //Going to stop being a hero and just allow user to create
-     //a joke when clicking the action button in bottom right
-     //corner of screen.
-
-
-
-
-
-
-
-      //Hide Jokes View, Display Jokes Form
-      // $('jokesView').hide()
-      // $('jokesEdit').show();
-
-
-    }
+    // function createJoke(e) {
+    //   e.preventDefault();
+    //   console.log('writeJokeButton event worked!');
+    //   console.log(this);
+    //
+    //   //1. Store topic ID and topicContent
+    //   var topicID, topicContent;
+    //   //1a. Store topicID
+    //   topicID = $(this).parents().eq(1).data('id');
+    //   console.log(topicID);
+    //   //1b. Store topicContent
+    //   topicContent = $(this).parent().parent().find('p').text();
+    //   console.log(topicContent);
+    //
+    //   //2. Onclick of 'write joke button', move to jokes route
+    //   // App.setLocation('#/jokes/');
+    //   //2a. Display jokesForm
+    //   //already displayed through css
+    //
+    //  //change topic to topicContent
+    //
+    //  //
+    //  //Attempted to store a topic and display on joke form -
+    //  //Going to stop being a hero and just allow user to create
+    //  //a joke when clicking the action button in bottom right
+    //  //corner of screen.
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //   //Hide Jokes View, Display Jokes Form
+    //   // $('jokesView').hide()
+    //   // $('jokesEdit').show();
+    //
+    //
+    // }
 
     //topics view
     this.get('#/topics/', function(context) {
@@ -188,26 +198,7 @@
 
       context.render('templates/topics-view.template').appendTo("#app");
 
-      //Moving this to the beginning of the App method.
-      dbRef.on('child_added', function(snapshot) {
-        var snapshotVal = snapshot.val();
-          var responseKeys = Object.keys(snapshotVal);
-
-          var topics = _.map(responseKeys, function(id) {
-            var firebaseTopicObj = snapshotVal[id];
-            return {
-              id: id,
-              content: firebaseTopicObj.content,
-              jokeWritten: firebaseTopicObj.jokeWritten
-            };
-          });
-
-          $.each(topics, function(i, topic) {
-              // console.log('topic #'+i, topic);
-              context.render('templates/topic.template', topic)
-                  .appendTo('#topics');
-          });
-        });
+      renderTopics(context);
 
     });
 
@@ -222,7 +213,6 @@
     });
 
     //Sets route
-
     this.get('#/sets/', function(context) {
 
       context.app.swap('');
@@ -238,13 +228,13 @@
 
     // Do this when no route defined:
     this.get('', function(context) {
-    // No route defined, set location to '#/' to trigger app automatically:
-    document.location.hash = '/topics/';
+      // No route defined, set location to '#/' to trigger app automatically:
+      document.location.hash = '/topics/';
     });
 
     // Catch-all for 404 errors:
     this.get(/.*/, function() {
-    console.log('404... come on, really?');
+      console.log('404... come on, really?');
     });
 
     //trigger reload when user adds topic
@@ -252,9 +242,50 @@
       this.redirect('#/topics/');
     });
 
-  });
+    function renderTopics(context) {
+        // topicsCollection.on('child_added', function(snapshot) {
+        //   var snapshotVal = snapshot.val();
+        //   var responseKeys = Object.keys(snapshotVal);
+        //   debugger;
+        //   var topics = _.map(responseKeys, function(id) {
+        //       var firebaseTopicObj = snapshotVal[id];
+        //       return {
+        //         id: id,
+        //         content: firebaseTopicObj.content,
+        //         jokeWritten: firebaseTopicObj.jokeWritten
+        //       };
+        //   });
+        //
+        //
+        //
+        //   $.each(topics, function(i, topic) {
+        //       console.log('topic #'+i, topic);
+        //       debugger;
+        //       context.render('templates/topic.template', topic)
+        //           .appendTo('#topics');
+        //   });
+        // });
 
-  $(function() {
-    App.run('#/topics/');
+        topicsCollection.on('value', function(response) {
+          var responseVal = response.val();
+          var responseIdentifiers = _.keys(responseVal);
+          var topics = _.map(responseIdentifiers, function(id) {
+            var topicObj = responseVal[id];
+            return {
+              id: id,
+              content: topicObj.content,
+              jokeWritten: topicObj.jokeWritten
+            };
+          });
+
+            $.each(topics, function(i, topic) {
+                // console.log('topic #'+i, topic);
+                context.render('templates/topic.template', topic)
+                    .appendTo('#topics');
+            });
+
+        })
+      };
+
   });
 })(jQuery);
