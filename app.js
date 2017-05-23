@@ -35,7 +35,6 @@
         //user is signed in
         //Use user's uid to create topicsCollection
         topicsCollection = db.ref("users/" + user.uid + "/topics");
-        debugger;
         App.run('#/topics/');
         App.trigger('reloadTopics', App);
 
@@ -63,8 +62,6 @@
       $('#topics').text(' ');
       topicsCollection = null;
       firebase.auth().signOut();
-
-      debugger;
 
     };
 
